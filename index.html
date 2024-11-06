@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="Scaling Up Membership Inference: When and How Attacks Succeed on Large Language Models">
+  <meta name="keywords" content="Membership Inference Attacks, LLMs, MIA, Security, Privacy">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scaling Up Membership Inference: When and How Attacks Succeed on Large Language Models</title>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <style>
+    .table td,
+    .table th {
+      text-align: center;
+    }
+
+    .table td.red-1 {
+      background-color: #f8d7da;
+    }
+
+    .table td.red-2 {
+      background-color: #f5b7b1;
+    }
+
+    .table td.red-3 {
+      background-color: #f1948a;
+    }
+
+    .table td.red-4 {
+      background-color: #ec7063;
+    }
+
+    .table td.red-5 {
+      background-color: #e74c3c;
+    }
+
+    .table td.green-1 {
+      background-color: #d4edda;
+    }
+
+    .table td.green-2 {
+      background-color: #a9dfbf;
+    }
+
+    .table td.green-3 {
+      background-color: #7dcea0;
+    }
+
+    .table td.green-4 {
+      background-color: #52be80;
+    }
+
+    .table td.green-5 {
+      background-color: #27ae60;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="https://haritzpuerto.github.io">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            More Research
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://haritzpuerto.github.io/divergent-cot/">
+              Divergent CoT
+            </a>
+            <a class="navbar-item" href="https://haritzpuerto.github.io/code-prompting/">
+              Code Prompting
+            </a>
+            <a class="navbar-item" href="https://square.ukp-lab.de">
+              SQuARE
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Scaling Up Membership Inference: When and How Attacks Succeed on
+              Large Language Models</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://haritzpuerto.github.io/">Haritz Puerto</a><sup>1,2</sup>,</span>
+              <span class="author-block">
+                <a href="https://gubri.eu/">Martin Gubri</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://sangdooyun.github.io/">Sangdoo Yun</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://coallaoh.github.io/">Seong Joon Oh</a><sup>1,4,5</sup>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Parameter Lab</span>
+              <span class="author-block"><sup>2</sup>Ubiquitous Knowledge Processing Lab, Technical University of
+                Darmstadt</span>
+              <span class="author-block"><sup>3</sup>NAVER AI Lab</span>
+              <span class="author-block"><sup>4</sup>University of Tübingen</span>
+              <span class="author-block"><sup>5</sup>Tübingen AI Center</span>
+            </div>
+            <a href="https://parameterlab.de">
+              <img src="./static/images/parameterlab.png" alt="Parameter Lab Logo"
+                style="max-width: 200px; margin-bottom: 20px;">
+            </a>
+            <a href="https://clova.ai/en/ai-research">
+              <img src="./static/images/naver.png" alt="NAVER Logo" style="max-width: 200px; margin-bottom: 20px;">
+            </a>
+
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2411.00154" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2411.00154" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/parameterlab/mia-scaling"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://huggingface.co/datasets/haritzpuerto/scaling_mia/resolve/main/results.zip"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                </a>
+              </span>
+              <!-- Twitter Link. -->
+              <span class="link-block">
+                <a href="https://twitter.com/haritzpuerto/status/1719795414425698394"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fab fa-twitter"></i>
+                  </span>
+                  <span>Thread</span>
+                </a>
+              </span>
+
+              <!-- Research Trend Link. -->
+              <span class="link-block">
+                <a href="https://researchtrend.ai/papers/2411.00154" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-chart-line"></i>
+                  </span>
+                  <span>ResearchTrend.AI</span>
+                </a>
+              </span>
+            </div>
+
+
+            <div class="column has-text-centered">
+              <!-- Abstract. -->
+              <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                  <b>TLDR:</b> Membership inference attacks (MIA) on large language models (LLMs) have been deemed
+                  ineffective, but we show they can succeed when applied at larger scales, such as document or
+                  collection levels.
+                </div>
+              </div>
+              <!-- Intro Image -->
+              <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                  <h2 class="title is-3"></h2>
+                  <div class="">
+                    <img src="./static/images/mia-teaser.png" class="" alt="Intro" />
+                  </div>
+                </div>
+              </div>
+              <!--/ Intro Image. -->
+              <h2 class="title is-3">Abstract</h2>
+              <div class="content has-text-justified">
+                <p>
+                  Membership inference attacks (MIA) attempt to verify whether specific data was used to train a model.
+                  With
+                  the rise of large language models (LLMs) and concerns about copyrighted training materials, detecting
+                  such
+                  usage has become increasingly important. While previous research suggested MIA methods were
+                  ineffective on
+                  LLMs, we demonstrate their viability when applied at larger scales.
+                </p>
+                <p>
+                  We construct new benchmarks that evaluate MIA performance across different scales - from individual
+                  sentences to collections of documents. By adapting recent Dataset Inference (DI) techniques, we
+                  develop an
+                  approach that aggregates paragraph-level MIA features to enable detection at document and collection
+                  levels.
+                </p>
+                <p>
+                  Our work achieves the first successful membership inference attacks on both pre-trained and fine-tuned
+                  LLMs. These results challenge previous conclusions about MIA ineffectiveness and demonstrate that such
+                  attacks can succeed when multiple documents are analyzed together rather than in isolation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Method -->
+
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Multi-Scale Evaluation of MIA</h2>
+          <div class="content has-text-justified">
+            <p>
+              We evaluate MIA at four distinct scales: sentence, paragraph, document, and collection. At the sentence
+              level (avg. 43 tokens), MIA helps detect contamination in benchmarks and privacy leakage, though success
+              is challenging due to high overlap between member/non-member sentences. Paragraph-level MIA operates
+              within model context windows (512-2048 tokens) and is relevant for social media content. Document-level
+              MIA targets full texts like research papers (avg. 14,222 tokens), requiring chunking into paragraphs and
+              aggregation of signals. This scale is crucial for copyright concerns around articles and books. Finally,
+              collection-level MIA examines sets of documents (e.g., 100 documents ≈ 1.4M tokens), important for
+              detecting if entire datasets were used in training. Our results show that MIA achieves the strongest
+              performance at document and collection scales, which is particularly relevant as copyright disputes often
+              center on complete articles rather than fragments.
+            </p>
+
+            <div class="columns is-centered has-text-centered">
+              <div class="column is-four-fifths">
+                <img src="./static/images/scale.png" alt="Different scales of MIA evaluation" />
+              </div>
+            </div>
+
+            <p>We ran experiments using Pythia models (2.8B and 6.9B parameters) with training samples from The Pile
+              dataset, comparing them to validation and test sets.</p>
+
+          </div>
+
+
+
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <h2 class="title is-3">MIA is Effective at the Right Scale</h2>
+              <div class="content has-text-justified">
+                <p>
+                  Our experiments demonstrate that MIA effectiveness increases with scale. While sentence and
+                  paragraph-level attacks show limited success, document and collection-level attacks achieve much
+                  stronger
+                  performance.
+                </p>
+
+                <div class="columns is-centered has-text-centered">
+                  <div class="column is-four-fifths">
+                    <img src="./static/images/benchmark.png"
+                      alt="Benchmark results showing MIA effectiveness at different scales" />
+                  </div>
+                </div>
+
+                <p>
+                  <strong>The key to make MIA work on LLMs is to aggreate MIA scores across a large enough number of
+                    tokens.</strong>
+                  If the MIA performance at paragraph level (the base unit to aggregate) is better than random chance,
+                  and we have enough text units to aggregate (i.e., long enough documents and large enough collections
+                  of documents), the aggregation of signals allows to classify membership with high confidence as shown
+                  in the figures bellow.
+                </p>
+
+                <div class="columns is-centered has-text-centered">
+                  <div class="column is-four-fifths">
+                    <img src="./static/images/aggregation.png" alt="Aggregation approach for document-level MIA" />
+                  </div>
+                </div>
+
+                <p>
+                  However, if the paragraph-MIA AUROC is too low or the amount of information to aggregate is too short,
+                  MIA will not work, as shown in the Figure below.
+                </p>
+                <div class="columns is-centered has-text-centered">
+                  <img src="./static/images/aggr-not-working.png" alt="Cases where MIA aggregation does not work" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Generation -->
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <h2 class="title is-3">Fine-tuning Amplifies the Effectiveness of MIA</h2>
+              <div class="content has-text-justified">
+                <p>
+                  Lastly, we test whether MIA could be use test data leaks in evaluation benchmarks.
+                  To do so, we use a <a href="https://huggingface.co/haritzpuerto/phi-2-dcot">fine-tuned Phi-2</a> on multiple question answering datasets and check the performance of MIA to detect membership of the training data questions.
+                  In the table below, we see that MIA is very effective even at sentence level and almost 100% effective for small collections of questions.
+                </p>
+                <div class="columns is-centered has-text-centered">
+                  <div class="column is-four-fifths">
+                    <img src="./static/images/fine-tuning.png" alt="MIA effectiveness on fine-tuned models" style="max-width: 600px;" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  </section>
+
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      Consider citing us if your find our work relevant.
+      <pre><code>@misc{puerto2024scalingmembershipinferenceattacks,
+        title={Scaling Up Membership Inference: When and How Attacks Succeed on Large Language Models}, 
+        author={Haritz Puerto and Martin Gubri and Sangdoo Yun and Seong Joon Oh},
+        year={2024},
+        eprint={2411.00154},
+        archivePrefix={arXiv},
+        primaryClass={cs.CL},
+        url={https://arxiv.org/abs/2411.00154}, 
+  }
+      </code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <a class="icon-link" href="https://arxiv.org/abs/2411.00154">
+          <i class="fas fa-file-pdf"></i>
+        </a>
+        <a class="icon-link" href="https://github.com/parameterlab/mia-scaling" class="external-link">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>This website is based on <a href="https://nerfies.github.io">Nerfies</a>
+              and licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
